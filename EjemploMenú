@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int opcion, a, b;
+   
+    do {
+        cout << "MENU DE OPCIONES" << endl;
+        cout << "1.Suma" << endl;// secuencial
+        cout << "2.Positivo o negativo " << endl; // condicional
+        cout << "3.Factorial " << endl; // repetitivo
+        cout << "0. SALIR" << endl;
+        cout << "Elige una opcion";
+        cin >> opcion;
+
+       switch (opcion) {
+
+       case 1:
+           cout << "Ingresa el primer valor:" << endl;
+           cin >> a;
+           cout << "Intgresa el segundo valor: " << endl;
+           cin >> b;
+           cout << "La suma es: " << a + b;
+           break;
+
+       case 2:
+           cout << "Ingresa un numero: " << endl;
+           cin >> a;
+           if (a > 0) 
+               cout << "El numero es positivo";
+           else 
+               cout << "No es positivo";
+           break;
+       case 3:
+           cout << "Ingresa hasta que numero se va a realizar el factorial: ";
+           cin >> a;
+           b = 1;
+           for (int i = 2; i <= a; i++)
+               b = b * i; // b es acumulador y i es contador
+           cout << "El numero factorial de" << a << " es: " << b << endl;
+               break;
+       case 0:
+           cout << "Salir";
+           break;
+       default:
+           cout << "Eror";     
+        }
+
+    } while (opcion != 0);
+    return 0;
+}
