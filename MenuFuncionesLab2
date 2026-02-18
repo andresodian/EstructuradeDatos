@@ -1,0 +1,87 @@
+//Autor:Andres Odian Reyanga
+//Fecha:18/02/2026
+//version:1.0
+
+#include <iostream>
+using namespace std;
+
+int suma (int a, int b);//Prototipos primero de todas las funciones
+bool valor (int c);
+int factorial (int d);
+int resta (int e, int f);
+
+int main() {
+    int opcion, a, b;
+
+    do {
+        cout << "MENU DE OPCIONES" << endl;
+        cout << "1. Suma" << endl;//secuencal
+        cout << "2. Positivo o negativo" << endl;//condicional
+        cout << "3. Factorial" << endl;//repetitivo
+        cout << "4. Resta" << endl; //adicion cualquier tipo
+        cout << "0. SALIR" << endl;
+        cout << "Elige una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+
+        case 1:
+            cout << "Ingresa el primer valor: ";
+            cin >> a;
+            cout << "Ingresa el segundo valor: ";
+            cin >> b;
+            cout << "La suma es: " << suma(a, b) << endl;
+            break;
+
+        case 2:
+            cout << "Ingresa un numero: ";
+            cin >> a;
+            if ( valor(a) )
+                cout << "El numero es positivo" << endl;
+            else
+                cout << "El numero es negativo o cero" << endl;
+            break;
+
+        case 3:
+            cout << "Ingresa hasta que numero se va a realizar el factorial: ";
+            cin >> a;
+            cout << "El factorial de " << a << " es: " << factorial(a) << endl;
+            break;
+        case 4:
+            cout << "Ingresa un primer valor: ";
+            cin >> a;
+            cout << "Ingresa el segundo valor: ";
+            cin >> b;
+            cout << "La resta es: " << resta(a, b) << endl;
+            break;
+
+        case 0:
+            cout << "Salir del programa" << endl;
+            break;
+
+        default:
+            cout << "Error: opcion invalida" << endl;
+        }
+
+    } while (opcion != 0);
+
+    return 0;
+}
+
+int suma(int a, int b) { //estructuras de lo que hace las funciones de ultimo y que devuelvo
+    return a + b;
+}
+bool valor(int c) {
+    return c > 0;
+}
+
+int factorial(int d) {
+    int resultado = 1;
+    for (int i = 2; i <= d ; i++) {
+        resultado *= i;
+    }
+    return resultado;
+}
+int resta(int e, int f) {
+    return e - f;
+}
