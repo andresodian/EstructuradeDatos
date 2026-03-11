@@ -1,0 +1,21 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Saludo {
+    private:
+	   string mensaje = "Hola Mundo";//atributo      clase termina con;
+    public:                                
+	   void mostrar();//metodos
+};
+
+void Saludo::mostrar() {
+	cout << "Hola Mundo";//           metodo no acaba con ;
+}
+
+int main()
+{
+	Saludo s1;// corre el constructor
+	s1.mostrar();
+}
