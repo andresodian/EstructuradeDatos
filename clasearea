@@ -1,0 +1,52 @@
+#include "Triangulo.h"
+
+Triangulo::Triangulo()
+{
+	base = 4;
+	altura = 5;
+}
+Triangulo::~Triangulo()
+{
+}
+
+float Triangulo::calcularea(float b, float h)
+{
+	return (b * h) / 2;
+}
+
+
+
+#pragma once
+class Triangulo
+{
+   private:
+	float base;
+	float altura;
+   public:
+	   Triangulo();
+	   ~Triangulo();
+	   float calculararea(float base, float altura);
+	
+};
+
+
+
+#include <iostream>
+#include "Triangulo.h"// se declara el .h de la clase usada
+
+using namespace std;
+
+int main()
+{
+	float base, altura;
+	Triangulo t1; // se crea un objeto para la clase
+	cout << "Ingrese la base:";
+	cin >> base;
+
+	cout << "Ingrese la altura: ";
+	cin >> altura;
+	cout << "El area es: " << t1.calculararea(base, altura);
+	
+	return 0;
+}
+
