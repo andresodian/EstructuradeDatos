@@ -1,0 +1,55 @@
+def promedio():
+    n = int(input("Cuantos numeros queres ingresar?: "))
+    suma = 0
+
+    for i in range(n):
+        num = float(input(f"Ingresa el numero {i+1}: "))
+        suma += num
+
+    prom = suma / n
+    print("El promedio es:", prom)
+
+
+def capicua():
+    num = input("Ingresa un numero: ")
+    
+    if num == num[::-1]:
+        print("El numero es capicua")
+    else:
+        print("El numero NO es capicua")
+
+
+def par_impar():
+    num = int(input("Ingresa un numero: "))
+    
+    if num % 2 == 0:
+        print("El numero es PAR")
+    else:
+        print("El numero es IMPAR")
+
+
+def menu():
+    opcion = 0
+
+    while opcion != 4:
+        print("\n--- MENU ---")
+        print("1. Calcular promedio")
+        print("2. Verificar capicua")
+        print("3. Par o impar")
+        print("4. Salir")
+
+        opcion = int(input("Elegi una opcion: "))
+
+        if opcion == 1:
+            promedio()
+        elif opcion == 2:
+            capicua()
+        elif opcion == 3:
+            par_impar()
+        elif opcion == 4:
+            print("Saliendo del programa...")
+        else:
+            print("Opcion invalida")
+
+
+menu()
