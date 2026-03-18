@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+#define MAX 10
+void serie(int n);
+void cargar(int vec[], int n);
+void mostrar(int vec[], int n);
+void cargarmatriz(int mat[MAX][MAX], int m, int n, int tam);
+
+int main()
+{
+    int opcion, n, vec[MAX], m, n2, maz[MAX][MAX];
+    do {
+        cout << "MENU" << endl;
+        cout << "1.Serie:";
+        cout << "2.Cargar vector";
+        cout << "3.Cargar a matriz";
+        cout << "0.Salir";
+        cin >> opcion;
+        switch (opcion) {
+        case 1:
+            cout << "Colocar los elementos de la serie:";
+            cin >> n;
+            serie(n);
+            break;
+        case 2:
+            cout << "Colocar los cantidades del vector:";
+            cin >> n;
+            cargar(vec, n);//aqui puedes llamar mostrar
+            break;
+        case 3:
+            cout << "Colocar los elements de la serie:";
+            cin >> n;
+            cout << "Colocar el tamaño de la matriz (fila x columna):";
+            cin >> m;
+            cout << "Columnas:";
+            cin >> n2;
+            cargarmatriz(maz, m, n2, n);
+            break;
+        case 0:
+            cout << "Saliendo...";
+            break;
+        default:
+            cout << "ERROR";
+            break;
+        }
+    } while (opcion != 0);
+}
+
+void serie(int n, int num) {
+     if (n ==0) {
+         return;
+    }
+    else {
+         cout << num << endl;
+    }
+     serie(n - 1, num + 3);
+}
+void cargar(int vec[], int n) {
+    vec[0] = 1;
+        for (int i = 1; i < n; i++){
+            vec[i] = vec[i - 1] + 3;
+         mostrar(vec, n);
+}
+void mostrar(int vec[], int n) {
+    for (int j = 0; j < n; j++){
+        cout << "elemento i=" << i << "= ";
+    cout << vec[i] << endl;
+}
+void cargarmatriz(int mat[MAX][MAX], int m, int n, int tam) {
+
+}
+INCOMPLETO
