@@ -1,0 +1,197 @@
+// ===== Pila.h =====
+#pragma once
+#include <string>
+#define MAX 100
+using TipoDato = std::string;
+
+class Pila
+{
+    private:
+        TipoDato pila[MAX];
+        int cima;
+
+    public:
+        Pila();
+        bool Apilar(TipoDato elemento);
+        bool Desapilar(TipoDato& elemento);
+        bool CimaPila(TipoDato& elemento);
+        void LimpiarPila();
+        void VerPila();
+        bool PilaVacia();
+        bool Iguales(Pila p);
+};
+
+
+// ===== Pila.cpp =====
+#include <iostream>
+#include "Pila.h"
+
+using namespace std;
+
+Pila::Pila()
+{
+    cima = -1;
+}
+
+bool Pila::Apilar(TipoDato elemento)
+{
+    bool res;
+    if (cima == MAX - 1)
+    {
+        cout << "Desbordamiento de Pila (Overflow)" << endl;
+        res = false;
+    }
+    else
+    {
+        cima++;
+        pila[cima] = elemento;
+        res = true;
+    }
+    return res;
+}
+
+bool Pila::Desapilar(TipoDato& elemento)
+{
+    bool res;
+    if (cima == -1)
+    {
+        cout << "Se esta intentando quitar un elemento de una pila vacia (underflow)" << endl;
+        res = false;
+    }
+    else
+    {
+        elemento = pila[cima];
+        cima--;
+        res = true;
+    }
+    return res;
+}
+
+bool Pila::CimaPila(TipoDato& elemento)
+{
+    bool res;
+    if (PilaVacia())
+    {
+        cout << "Se esta intentando ver un elemento de una pila vacia (underflow)" << endl;
+        res = false;
+    }
+    else
+    {
+        elemento = pila[cima];
+        res = true;
+    }
+    return res;
+}
+
+void Pila::VerPila()
+{
+    for (int i = cima; i >= 0; i--)
+        cout << pila[i] << endl;
+}
+
+bool Pila::PilaVacia()
+{
+    return cima == -1;
+}
+
+void Pila::LimpiarPila()
+{
+    cima = -1;
+}
+
+bool Pila::Iguales(Pila p)
+{
+    if (cima != p.cima)
+        return false;
+
+    for (int i = 0; i <= cima; i++)
+    {
+        if (pila[i] != p.pila[i])
+            return false;
+    }
+
+    return true;
+}
+
+
+// ===== main.cpp =====
+#include <iostream>
+#include "Pila.h"
+#include "stdlib.h"
+
+using namespace std;
+
+int main()
+{
+    string r, x;
+    int opcion;
+    Pila p1, p2;
+
+    do {
+        cout << endl;
+        cout << "1.- Apilar (Push)" << endl;
+        cout << "2.- Desapilar (Pop)" << endl;
+        cout << "3.- Ver el elemento del tope" << endl;
+        cout << "4.- Pila Vacia" << endl;
+        cout << "5.- Dos pilas iguales" << endl;
+        cout << "6.- Ver pilas" << endl;
+        cout << "7.- Limpiar pilas" << endl;
+        cout << "0.- Salir" << endl;
+        cout << "Elige una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            cout << "Ingresa el dato a apilar: ";
+            cin.ignore();
+            getline(cin, r);
+            if (p1.Apilar(r))
+                cout << "Se proceso la apilacion";
+            break;
+
+        case 2:
+            if (p1.Desapilar(r))
+                cout << "Desapilado correctamente: " << r;
+            break;
+
+        case 3:
+            if (p1.CimaPila(r))
+                cout << "El elemto de la pila es: " << r;
+            break;
+
+        case 4:
+            if (p1.PilaVacia())
+                cout << "La pila esta vacia" << endl;
+            else
+                cout << "La pila tiene elementos";
+            break;
+
+        case 5:
+            cout << "Ingresa dato para la segunda pila: ";
+            cin.ignore();
+            getline(cin, x);
+            p2.Apilar(x);
+
+            if (p1.Iguales(p2))
+                cout << "Son iguales" << endl;
+            else
+                cout << "No son iguales" << endl;
+            break;
+
+        case 6:
+            p1.VerPila();
+            break;
+
+        case 7:
+            p1.LimpiarPila();
+            break;
+
+        case 0:
+            cout << "Salir";
+            break;
+
+        default:
+            cout << "Opcion invalida" << endl;
+        }
+    } while (opcion != 0);
+}
