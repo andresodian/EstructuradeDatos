@@ -1,9 +1,29 @@
-#include "Pila.h"
-/*************************************************************/
-//                      pila.cpp
-/*************************************************************/
+// ===== Pila.h =====
+#pragma once
+#define MAX 100
+using TipoDato = int;
+
+class Pila
+{
+    private:
+        int pila[MAX];
+        int cima;
+
+    public:
+        Pila();
+        bool Apilar(TipoDato elemento);
+        bool Desapilar(TipoDato& elemento);
+        bool CimaPila(TipoDato& elemento);
+        void LimpiarPila();
+        void VerPila();
+        bool PilaVacia();
+        bool Iguales(Pila p);
+};
+
+
+// ===== Pila.cpp =====
 #include <iostream>
-#include "pila.h"
+#include "Pila.h"
 
 using namespace std;
 
@@ -12,7 +32,7 @@ Pila::Pila()
     cima = -1;
 }
 
-bool Pila::Apilar(TipoDato& elemento)
+bool Pila::Apilar(TipoDato elemento)
 {
     bool res;
     if (cima == MAX - 1)
@@ -21,63 +41,51 @@ bool Pila::Apilar(TipoDato& elemento)
         res = false;
     }
     else
-
     {
         cima++;
         pila[cima] = elemento;
         res = true;
     }
     return res;
-
-
 }
 
-bool Pila::Desapilar()
+bool Pila::Desapilar(TipoDato& elemento)
 {
     bool res;
     if (cima == -1)
     {
-        cerr << "Se esta intentando quitar un elemento de una pila vacia (underflow)" << endl;
+        cout << "Se esta intentando quitar un elemento de una pila vacia (underflow)" << endl;
         res = false;
     }
     else
-
     {
+        elemento = pila[cima];
         cima--;
         res = true;
     }
     return res;
-
-
 }
-
-void Pila::VerPila()
-{
-    for (int i = 0; i <= cima; i++)
-        cout << pila[i] << endl;
-
-}
-
 
 bool Pila::CimaPila(TipoDato& elemento)
 {
     bool res;
-    if (PilaVacia())//(cima == -1)
+    if (PilaVacia())
     {
-        cerr << "Se esta intentando quitar un elemento de una pila vacia (underflow)" << endl;
+        cout << "Se esta intentando ver un elemento de una pila vacia (underflow)" << endl;
         res = false;
     }
     else
-
     {
-        elemento=pila[cima];
-       // cima--;
+        elemento = pila[cima];
         res = true;
     }
-
     return res;
+}
 
-
+void Pila::VerPila()
+{
+    for (int i = cima; i >= 0; i--)
+        cout << pila[i] << endl;
 }
 
 bool Pila::PilaVacia()
@@ -90,49 +98,32 @@ void Pila::LimpiarPila()
     cima = -1;
 }
 
-
 bool Pila::Iguales(Pila p)
 {
-    //hacer aca que compare la cima si no es return false luego compara las dos pilas por elemento   parcial pila colas y punteros
+    if (cima != p.cima)
+        return false;
+
+    for (int i = 0; i <= cima; i++)
+    {
+        if (pila[i] != p.pila[i])
+            return false;
+    }
+
+    return true;
 }
 
 
-
-#pragma once
-// typedef int TipoDato; sirve pero es antiguo
-#define MAX 100
-using TipoDato = int; //para C++
-class Pila
-{
-    private:
-        int pila[MAX];
-        int cima;
-
-    public:
-        Pila();
-        bool Apilar(TipoDato& elemento);
-        bool Desapilar();
-        bool CimaPila(TipoDato& elemento);
-        void LimpiarPila();
-        void VerPila();
-        bool PilaVacia();
-        bool Iguales(Pila p);
-
-    };
-
-
-// Pilasestaticas.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
-//
-
+// ===== main.cpp =====
 #include <iostream>
 #include "Pila.h"
 #include "stdlib.h"
 
 using namespace std;
+
 int main()
 {
-    int  r, opcion, x ;
-    Pila p1, p2;//Llama al constructor
+    int r, opcion, x;
+    Pila p1, p2;
 
     do {
         cout << endl;
@@ -154,40 +145,50 @@ int main()
             if (p1.Apilar(r))
                 cout << "Se proceso la apilacion";
             break;
+
         case 2:
-            if (p1.Desapilar())
-                cout << "Desapilado correctamente";
+            if (p1.Desapilar(r))
+                cout << "Desapilado correctamente: " << r;
             break;
+
         case 3:
             if (p1.CimaPila(r))
                 cout << "El elemto de la pila es: " << r;
             break;
+
         case 4:
             if (p1.PilaVacia())
                 cout << "La pila esta vacia" << endl;
             else
                 cout << "La pila tiene elementos";
             break;
+
         case 5:
-            if(p2.Apilar(x));
+            cout << "Ingresa dato para la segunda pila: ";
+            cin >> x;
+            p2.Apilar(x);
+
             if (p1.Iguales(p2))
-                cout << "Son inguales" << endl;
+                cout << "Son iguales" << endl;
+            else
+                cout << "No son iguales" << endl;
             break;
+
         case 6:
             p1.VerPila();
             break;
+
         case 7:
             p1.LimpiarPila();
             break;
+
         case 0:
             cout << "Salir";
             break;
-        default: 
+
+        default:
             cout << "Opcion invalida" << endl;
         }
     } while (opcion != 0);
-   
 }
-
-
 
