@@ -1,0 +1,122 @@
+#include "Queue.h"
+
+Queue::Queue() {
+    cabeza = 0;
+    cola = 0;
+    ITEMS = 0;
+}
+
+Queue::~Queue() {}
+
+bool Queue::empty() {
+    return ITEMS == 0;
+}
+
+bool Queue::put(char d) {
+    if (ITEMS == MAX_SIZE) return false;
+    alma[cola] = d;
+    cola = (cola + 1) % MAX_SIZE;
+    ITEMS++;
+    return true;
+}
+
+char Queue::get() {
+    if (empty()) return -1;
+    char d = alma[cabeza];
+    cabeza = (cabeza + 1) % MAX_SIZE;
+    ITEMS--;
+    return d;
+}
+
+int Queue::size() {
+    return ITEMS;
+}
+
+#pragma once
+
+#define MAX_SIZE 256
+
+typedef char almacen[MAX_SIZE];
+
+class Queue {
+private:
+    int cabeza;
+    int cola;
+    int ITEMS;
+    almacen alma;
+
+public:
+    Queue();
+    ~Queue();
+    bool empty();
+    bool put(char d);
+    char get();
+    int size();
+};
+#include <iostream>
+#include "Queue.h"
+
+using namespace std;
+
+void menu() {
+    cout << "\nMENU\n";
+    cout << "1. Insertar\n";
+    cout << "2. Retirar\n";
+    cout << "3. Ver tamanio\n";
+    cout << "4. Ver si esta vacia\n";
+    cout << "5. Salir\n";
+    cout << "Opcion: ";
+}
+
+int main() {
+    Queue q;
+    int opcion;
+    char elemento;
+
+    do {
+        menu();
+        cin >> opcion;
+
+        switch (opcion) {
+
+        case 1:
+            cout << "Ingrese un caracter: ";
+            cin >> elemento;
+            q.put(elemento);
+            break;
+
+        case 2:
+            if (!q.empty()) {
+                cout << "Retirado: " << q.get() << endl;
+            }
+            else {
+                cout << "Cola vacia\n";
+            }
+            break;
+
+        case 3:
+            cout << "Tamaño: " << q.size() << endl;
+            break;
+
+        case 4:
+            if (q.empty()) {
+                cout << "La cola esta vacia\n";
+            }
+            else {
+                cout << "La cola NO esta vacia\n";
+            }
+            break;
+
+        case 5:
+            cout << "Saliendo...\n";
+            break;
+
+        default:
+            cout << "Opcion invalida\n";
+            break;
+        }
+
+    } while (opcion != 5);
+
+    return 0;
+}
