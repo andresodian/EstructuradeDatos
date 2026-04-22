@@ -1,65 +1,131 @@
-//Pilacpp
-#include "Pila.h"
-
-Pila::Pila() {
-	tope = NULL;
-}
-void Pila::push() {
-	int valor;
-	string valor2;
-	Nodo* aux = new Nodo;
-	system("cls");
-	cout << "Ingresa el ID del proceso:";
-	cin >> valor;
-	cout << "Ingresa el nombre del proceso:";
-	cin.ignore();
-	getline(cin, valor2);
-	aux -> dato = valor;
-	aux-> nombre = valor2;
-	aux->sig = NULL;
-
-	if (tope != NULL)
-		aux->sig = tope;
-	tope = aux;
-	cout << "Nuevo proceso incertado";
-}
-
-void pop();
-void show();
-void size();
-void size();
-// Pila.h
-#pragma once
-#include <iostream>
-#include <string>
-#include "Nodo.h"
-
-using namespace std;
-
-class Pila
-{
-	Nodo* tope;
-public: 
-	Pila();
-	void push();
-	void pop();
-	void show();
-	void size();
-	void size();
-};
-
-
-//Nodo.h
-#pragma once
 #include <iostream>
 #include <string>
 
 using namespace std;
-class Nodo
-{
+
+// Nodo.h
+class Nodo {
 public:
-	int dato;
-	string nombre;
-	Nodo* sig;
+    int dato;
+    string nombre;
+    Nodo* sig;
 };
-//Proyecto.cpp
+
+// Pila.h
+class Pila {
+private:
+    Nodo* tope;
+public:
+    Pila();
+    ~Pila();
+    void push();
+    void pop();
+    void show();
+    void size();
+};
+
+// Pila.cpp
+Pila::Pila() {
+    tope = NULL;
+}
+
+Pila::~Pila() {
+    while (tope != NULL) {
+        Nodo* aux = tope;
+        tope = tope->sig;
+        delete aux;
+    }
+}
+
+void Pila::push() {
+    int valor;
+    string valor2;
+    Nodo* aux = new Nodo;
+    
+    cout << endl << "ID del proceso: ";
+    cin >> valor;
+    cout << "Nombre del proceso: ";
+    cin.ignore();
+    getline(cin, valor2);
+    
+    aux->dato = valor;
+    aux->nombre = valor2;
+    aux->sig = tope;
+    tope = aux;
+    
+    cout << "Proceso insertado correctamente." << endl;
+}
+
+void Pila::pop() {
+    if (tope == NULL) {
+        cout << endl << "Error: La pila esta vacia." << endl;
+        return;
+    }
+    Nodo* aux = tope;
+    tope = tope->sig;
+    cout << endl << "Eliminando proceso: " << aux->nombre << endl;
+    delete aux;
+}
+
+void Pila::show() {
+    Nodo* actual = tope;
+    if (actual == NULL) {
+        cout << endl << "La pila no tiene elementos." << endl;
+        return;
+    }
+    cout << endl << "LISTA DE PROCESOS" << endl;
+    while (actual != NULL) {
+        cout << "ID: " << actual->dato << " | Nombre: " << actual->nombre << endl;
+        actual = actual->sig;
+    }
+}
+
+void Pila::size() {
+    int contador = 0;
+    Nodo* actual = tope;
+    while (actual != NULL) {
+        contador++;
+        actual = actual->sig;
+    }
+    cout << endl << "Cantidad total de procesos: " << contador << endl;
+}
+
+// Proyecto.cpp
+int main() {
+    Pila pilaProcesos;
+    int opcion;
+
+    do {
+        cout << endl << "MENU DE PROCESOS" << endl;
+        cout << "1. Push (Insertar)" << endl;
+        cout << "2. Pop (Eliminar)" << endl;
+        cout << "3. Show (Mostrar)" << endl;
+        cout << "4. Size (Contar)" << endl;
+        cout << "5. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                pilaProcesos.push();
+                break;
+            case 2:
+                pilaProcesos.pop();
+                break;
+            case 3:
+                pilaProcesos.show();
+                break;
+            case 4:
+                pilaProcesos.size();
+                break;
+            case 5:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opcion no valida, intente de nuevo." << endl;
+                break;
+        }
+    } while (opcion != 5);
+
+    return 0;
+}
