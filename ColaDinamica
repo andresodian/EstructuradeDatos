@@ -1,0 +1,198 @@
+//ColaDinamica.cpp
+#include <iostream>
+#include "Nodo.h"
+
+using namespace std;
+
+void Encolar(Nodo*& inicio, Nodo*& fin);
+void Desencolar(Nodo*& inicio);
+
+int main() {
+    Nodo* inicio = NULL, * fin = NULL;
+    int opc;
+
+    do {
+        cout << "\n=== COLA DINAMICA DE VIDEOJUEGOS ===\n";
+        cout << "1. Ver si esta vacia\n";
+        cout << "2. Encolar videojuego\n";
+        cout << "3. Desencolar videojuego\n";
+        cout << "4. Salir\n";
+        cout << "Opcion: ";
+        cin >> opc;
+
+        switch (opc) {
+        case 1:
+            if (inicio == NULL)
+                cout << "La cola esta vacia\n";
+            else
+                cout << "Hay videojuegos en la cola\n";
+            break;
+        case 2:
+            Encolar(inicio, fin);
+            break;
+        case 3:
+            Desencolar(inicio);
+            break;
+        }
+
+    } while (opc != 4);
+
+    return 0;
+}
+
+void Encolar(Nodo*& inicio, Nodo*& fin) {
+    Nodo* nuevo = new Nodo();
+
+    cout << "Nombre del videojuego: ";
+    cin >> nuevo->dato.nombre;
+
+    cout << "Genero: ";
+    cin >> nuevo->dato.genero;
+
+    cout << "Precio: ";
+    cin >> nuevo->dato.precio;
+
+    nuevo->siguiente = NULL;
+
+    if (inicio == NULL) {
+        inicio = fin = nuevo;
+    }
+    else {
+        fin->siguiente = nuevo;
+        fin = nuevo;
+    }
+}
+
+void Desencolar(Nodo*& inicio) {
+    if (inicio != NULL) {
+        cout << "\n--- Videojuego eliminado ---\n";
+        cout << "Nombre: " << inicio->dato.nombre << endl;
+        cout << "Genero: " << inicio->dato.genero << endl;
+        cout << "Precio: " << inicio->dato.precio << endl;
+
+        Nodo* temp = inicio;
+        inicio = inicio->siguiente;
+        delete temp;
+    }
+    else {
+        cout << "La cola esta vacia\n";
+    }
+}
+//Nodo.cpp
+#include "Nodo.h"
+
+Nodo::Nodo() {
+    siguiente = NULL;
+}
+//Nodo.h
+#pragma once
+#include "Dato.h"
+
+class Nodo {
+public:
+    Dato dato;
+    Nodo* siguiente;
+
+    Nodo();
+};
+//Dato.cpp
+#include "Dato.h"
+
+Dato::Dato() {
+    nombre = "Desconocido";
+    genero = "Desconocido";
+    precio = 0.0;
+}
+//Dato.h
+#pragma once
+#include <string>
+using namespace std;
+
+class Dato {
+public:
+    string nombre;
+    string genero;
+    double precio;
+
+    Dato();
+};
+//ColaDinamico.cpp
+#include <iostream>
+#include "Nodo.h"
+
+using namespace std;
+
+void Encolar(Nodo*& inicio, Nodo*& fin);
+void Desencolar(Nodo*& inicio);
+
+int main() {
+    Nodo* inicio = NULL, * fin = NULL;
+    int opc;
+
+    do {
+        cout << "\n=== COLA DINAMICA DE VIDEOJUEGOS ===\n";
+        cout << "1. Ver si esta vacia\n";
+        cout << "2. Encolar videojuego\n";
+        cout << "3. Desencolar videojuego\n";
+        cout << "4. Salir\n";
+        cout << "Opcion: ";
+        cin >> opc;
+
+        switch (opc) {
+        case 1:
+            if (inicio == NULL)
+                cout << "La cola esta vacia\n";
+            else
+                cout << "Hay videojuegos en la cola\n";
+            break;
+        case 2:
+            Encolar(inicio, fin);
+            break;
+        case 3:
+            Desencolar(inicio);
+            break;
+        }
+
+    } while (opc != 4);
+
+    return 0;
+}
+
+void Encolar(Nodo*& inicio, Nodo*& fin) {
+    Nodo* nuevo = new Nodo();
+
+    cout << "Nombre del videojuego: ";
+    cin >> nuevo->dato.nombre;
+
+    cout << "Genero: ";
+    cin >> nuevo->dato.genero;
+
+    cout << "Precio: ";
+    cin >> nuevo->dato.precio;
+
+    nuevo->siguiente = NULL;
+
+    if (inicio == NULL) {
+        inicio = fin = nuevo;
+    }
+    else {
+        fin->siguiente = nuevo;
+        fin = nuevo;
+    }
+}
+
+void Desencolar(Nodo*& inicio) {
+    if (inicio != NULL) {
+        cout << "\n--- Videojuego eliminado ---\n";
+        cout << "Nombre: " << inicio->dato.nombre << endl;
+        cout << "Genero: " << inicio->dato.genero << endl;
+        cout << "Precio: " << inicio->dato.precio << endl;
+
+        Nodo* temp = inicio;
+        inicio = inicio->siguiente;
+        delete temp;
+    }
+    else {
+        cout << "La cola esta vacia\n";
+    }
+}
