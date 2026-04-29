@@ -1,0 +1,181 @@
+//DDQueue.cpp
+#include "DDQueue.h"
+#include <iostream>
+
+using namespace std;
+
+DDQueue::DDQueue() {
+    frente = NULL;
+    final = NULL;
+    items = 0;
+}
+
+DDQueue::~DDQueue() {
+    while (!estaVacia()) {
+        sacarFrente();
+    }
+}
+
+bool DDQueue::estaVacia() {
+    return items == 0;
+}
+
+void DDQueue::ponerFrente(DATA_TYPE valor) {
+    Nodo* nuevo = new Nodo(valor);
+    if (estaVacia()) {
+        frente = final = nuevo;
+    }
+    else {
+        nuevo->next = frente;
+        frente->prev = nuevo;
+        frente = nuevo;
+    }
+    items++;
+}
+
+void DDQueue::ponerFinal(DATA_TYPE valor) {
+    Nodo* nuevo = new Nodo(valor);
+    if (estaVacia()) {
+        frente = final = nuevo;
+    }
+    else {
+        final->next = nuevo;
+        nuevo->prev = final;
+        final = nuevo;
+    }
+    items++;
+}
+
+DATA_TYPE DDQueue::sacarFrente() {
+    if (estaVacia()) return -1;
+
+    DATA_TYPE valor = frente->data;
+    Nodo* temp = frente;
+    frente = frente->next;
+
+    if (frente) frente->prev = NULL;
+    else final = NULL;
+
+    delete temp;
+    items--;
+    return valor;
+}
+
+DATA_TYPE DDQueue::sacarFinal() {
+    if (estaVacia()) return -1;
+
+    DATA_TYPE valor = final->data;
+    Nodo* temp = final;
+    final = final->prev;
+
+    if (final) final->next = NULL;
+    else frente = NULL;
+
+    delete temp;
+    items--;
+    return valor;
+}
+
+void DDQueue::mostrar() {
+    if (estaVacia()) {
+        cout << "Lista vacia." << endl;
+        return;
+    }
+    Nodo* aux = frente;
+    while (aux) {
+        cout << aux->data << " ";
+        aux = aux->next;
+    }
+    cout << endl;
+}
+//Nodo.h
+#pragma once
+#include <iostream>
+
+typedef char DATA_TYPE;
+
+class Nodo {
+public:
+    DATA_TYPE data;
+    Nodo* next;
+    Nodo* prev;
+
+    Nodo(DATA_TYPE valor);
+};
+//DDQueue.h
+#pragma once
+#include "Nodo.h"
+
+class DDQueue {
+private:
+    Nodo* frente;
+    Nodo* final;
+    int items;
+
+public:
+    DDQueue();
+    ~DDQueue();
+
+    bool estaVacia();
+    void ponerFrente(DATA_TYPE valor);
+    void ponerFinal(DATA_TYPE valor);
+    DATA_TYPE sacarFrente();
+    DATA_TYPE sacarFinal();
+    void mostrar();
+};
+//Nodo.cpp
+#include "Nodo.h"
+#include <iostream>
+
+Nodo::Nodo(DATA_TYPE valor) {
+    data = valor;
+    next = NULL;
+    prev = NULL;
+}
+//ColDoble.cpp
+#include <iostream>
+#include "DDQueue.h"
+
+using namespace std;
+
+int main() {
+    DDQueue lista;
+    int opcion;
+    DATA_TYPE dato;
+
+    do {
+        cout << "\n--- MENU COLA DOBLE ---" << endl;
+        cout << "1. Poner al FRENTE" << endl;
+        cout << "2. Poner al FINAL" << endl;
+        cout << "3. Sacar del FRENTE" << endl;
+        cout << "4. Sacar del FINAL" << endl;
+        cout << "5. Mostrar Cola" << endl;
+        cout << "6. Salir" << endl;
+        cout << "Seleccione: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            cout << "Caracter: "; cin >> dato;
+            lista.ponerFrente(dato);
+            break;
+        case 2:
+            cout << "Caracter: "; cin >> dato;
+            lista.ponerFinal(dato);
+            break;
+        case 3:
+            dato = lista.sacarFrente();
+            if (dato != -1) cout << "Extraido: " << dato << endl;
+            break;
+        case 4:
+            dato = lista.sacarFinal();
+            if (dato != -1) cout << "Extraido: " << dato << endl;
+            break;
+        case 5:
+            lista.mostrar();
+            break;
+        }
+    } while (opcion != 6);
+
+    return 0;
+}
