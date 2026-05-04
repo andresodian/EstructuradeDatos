@@ -1,0 +1,225 @@
+// ===== Nodo.h =====
+#pragma once
+using TipoDato = int;
+
+class Nodo
+{
+public:
+    TipoDato dato;
+    Nodo* siguiente;
+
+    Nodo(TipoDato valor);
+};
+
+
+// ===== Nodo.cpp =====
+#include "Nodo.h"
+
+Nodo::Nodo(TipoDato valor)
+{
+    dato = valor;
+    siguiente = NULL;
+}
+
+
+// ===== Pila.h =====
+#pragma once
+#include "Nodo.h"
+
+class Pila
+{
+private:
+    Nodo* cima;
+
+public:
+    Pila();
+
+    bool Apilar(TipoDato elemento);
+    bool Desapilar(TipoDato& elemento);
+    bool CimaPila(TipoDato& elemento);
+    void LimpiarPila();
+    void VerPila();
+    bool PilaVacia();
+    bool Iguales(Pila p);
+};
+
+
+// ===== Pila.cpp =====
+#include <iostream>
+#include "Pila.h"
+
+using namespace std;
+
+Pila::Pila()
+{
+    cima = NULL;
+}
+
+bool Pila::Apilar(TipoDato elemento)
+{
+    Nodo* nuevo = new Nodo(elemento);
+
+    nuevo->siguiente = cima;
+    cima = nuevo;
+
+    return true;
+}
+
+bool Pila::Desapilar(TipoDato& elemento)
+{
+    if (PilaVacia())
+    {
+        cout << "Se esta intentando quitar un elemento de una pila vacia (underflow)" << endl;
+        return false;
+    }
+
+    Nodo* temp = cima;
+    elemento = cima->dato;
+    cima = cima->siguiente;
+
+    delete temp;
+
+    return true;
+}
+
+bool Pila::CimaPila(TipoDato& elemento)
+{
+    if (PilaVacia())
+    {
+        cout << "Se esta intentando ver un elemento de una pila vacia (underflow)" << endl;
+        return false;
+    }
+
+    elemento = cima->dato;
+    return true;
+}
+
+void Pila::VerPila()
+{
+    Nodo* actual = cima;
+
+    while (actual != NULL)
+    {
+        cout << actual->dato << endl;
+        actual = actual->siguiente;
+    }
+}
+
+bool Pila::PilaVacia()
+{
+    return cima == NULL;
+}
+
+void Pila::LimpiarPila()
+{
+    TipoDato temp;
+
+    while (!PilaVacia())
+    {
+        Desapilar(temp);
+    }
+}
+
+bool Pila::Iguales(Pila p)
+{
+    Nodo* actual1 = cima;
+    Nodo* actual2 = p.cima;
+
+    while (actual1 != NULL && actual2 != NULL)
+    {
+        if (actual1->dato != actual2->dato)
+            return false;
+
+        actual1 = actual1->siguiente;
+        actual2 = actual2->siguiente;
+    }
+
+    return actual1 == NULL && actual2 == NULL;
+}
+
+
+// ===== main.cpp =====
+#include <iostream>
+#include "Pila.h"
+
+using namespace std;
+
+int main()
+{
+    int opcion, dato, aux;
+    Pila p1, p2;
+
+    do
+    {
+        cout << endl;
+        cout << "===== PILA DINAMICA SIMPLE =====" << endl;
+        cout << "1. Apilar" << endl;
+        cout << "2. Desapilar" << endl;
+        cout << "3. Ver cima" << endl;
+        cout << "4. Verificar si esta vacia" << endl;
+        cout << "5. Comparar con segunda pila" << endl;
+        cout << "6. Ver pila" << endl;
+        cout << "7. Limpiar pila" << endl;
+        cout << "0. Salir" << endl;
+        cout << "Opcion: ";
+        cin >> opcion;
+
+        switch (opcion)
+        {
+        case 1:
+            cout << "Ingrese dato: ";
+            cin >> dato;
+
+            if (p1.Apilar(dato))
+                cout << "Dato apilado correctamente" << endl;
+            break;
+
+        case 2:
+            if (p1.Desapilar(aux))
+                cout << "Dato desapilado: " << aux << endl;
+            break;
+
+        case 3:
+            if (p1.CimaPila(aux))
+                cout << "Elemento en la cima: " << aux << endl;
+            break;
+
+        case 4:
+            if (p1.PilaVacia())
+                cout << "La pila esta vacia" << endl;
+            else
+                cout << "La pila tiene elementos" << endl;
+            break;
+
+        case 5:
+            cout << "Ingrese dato para segunda pila: ";
+            cin >> dato;
+            p2.Apilar(dato);
+
+            if (p1.Iguales(p2))
+                cout << "Las pilas son iguales" << endl;
+            else
+                cout << "Las pilas no son iguales" << endl;
+            break;
+
+        case 6:
+            p1.VerPila();
+            break;
+
+        case 7:
+            p1.LimpiarPila();
+            cout << "Pila limpiada" << endl;
+            break;
+
+        case 0:
+            cout << "Saliendo..." << endl;
+            break;
+
+        default:
+            cout << "Opcion invalida" << endl;
+        }
+
+    } while (opcion != 0);
+
+    return 0;
+}
