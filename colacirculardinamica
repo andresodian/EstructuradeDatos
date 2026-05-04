@@ -1,0 +1,220 @@
+//Nodo.h
+#pragma once
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Nodo
+{
+public:
+    string valor;
+    Nodo* sig;
+
+    Nodo(string v);
+};
+//Nodo.cpp
+#include "Nodo.h"
+
+Nodo::Nodo(string v)
+{
+    valor = v;
+    sig = NULL;
+}
+//ColaCircular.h
+#pragma once
+#include <iostream>
+#include <string>
+#include "Nodo.h"
+
+using namespace std;
+
+class ColaCircular
+{
+private:
+    Nodo* frente;
+    Nodo* fin;
+    int cantidad;
+
+public:
+    ColaCircular();
+    ~ColaCircular();
+
+    bool estaLlena();
+    bool estaVacia();
+    bool encolar(string valor);
+    string desencolar();
+    void mostrar();
+};
+//ColaCircula.cpp
+#include "ColaCircular.h"
+#include <iostream>
+
+using namespace std;
+
+ColaCircular::ColaCircular()
+{
+    frente = NULL;
+    fin = NULL;
+    cantidad = 0;
+}
+
+ColaCircular::~ColaCircular()
+{
+    while (!estaVacia())
+    {
+        desencolar();
+    }
+}
+
+bool ColaCircular::estaLlena()
+{
+    return false;
+}
+
+bool ColaCircular::estaVacia()
+{
+    return frente == NULL;
+}
+
+bool ColaCircular::encolar(string valor)
+{
+    Nodo* nuevo = new Nodo(valor);
+
+    if (estaVacia())
+    {
+        frente = fin = nuevo;
+        nuevo->sig = nuevo;
+    }
+    else
+    {
+        nuevo->sig = frente;
+        fin->sig = nuevo;
+        fin = nuevo;
+    }
+
+    cantidad++;
+    return true;
+}
+
+string ColaCircular::desencolar()
+{
+    if (estaVacia())
+    {
+        return "COLA VACÍA";
+    }
+
+    string valor;
+
+    if (frente == fin)
+    {
+        valor = frente->valor;
+        delete frente;
+        frente = fin = NULL;
+    }
+    else
+    {
+        Nodo* temp = frente;
+        valor = temp->valor;
+        frente = frente->sig;
+        fin->sig = frente;
+        delete temp;
+    }
+
+    cantidad--;
+    return valor;
+}
+
+void ColaCircular::mostrar()
+{
+    if (estaVacia())
+    {
+        cout << "Cola vacía." << endl;
+        return;
+    }
+
+    cout << "Contenido de la cola: ";
+
+    Nodo* actual = frente;
+
+    do
+    {
+        cout << "[" << actual->valor << "] ";
+        actual = actual->sig;
+    }
+    while (actual != frente);
+
+    cout << endl;
+}
+//main.cpp
+#include "ColaCircular.h"
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    ColaCircular cola;
+    int opcion;
+    string valor;
+
+    do
+    {
+        cout << endl;
+        cout << "===== MENU COLA CIRCULAR DINAMICA =====" << endl;
+        cout << "1. Encolar elemento" << endl;
+        cout << "2. Desencolar elemento" << endl;
+        cout << "3. Mostrar cola" << endl;
+        cout << "4. Verificar si esta vacia" << endl;
+        cout << "5. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+        cin.ignore();
+
+        switch (opcion)
+        {
+        case 1:
+            cout << "Ingrese valor: ";
+            getline(cin, valor);
+
+            if (cola.encolar(valor))
+            {
+                cout << "Elemento encolado correctamente." << endl;
+            }
+            else
+            {
+                cout << "No se pudo encolar." << endl;
+            }
+            break;
+
+        case 2:
+            cout << "Elemento atendido: " << cola.desencolar() << endl;
+            break;
+
+        case 3:
+            cola.mostrar();
+            break;
+
+        case 4:
+            if (cola.estaVacia())
+            {
+                cout << "La cola esta vacia." << endl;
+            }
+            else
+            {
+                cout << "La cola NO esta vacia." << endl;
+            }
+            break;
+
+        case 5:
+            cout << "Saliendo del programa..." << endl;
+            break;
+
+        default:
+            cout << "Opcion invalida." << endl;
+        }
+
+    } while (opcion != 5);
+
+    return 0;
+}
