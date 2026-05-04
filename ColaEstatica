@@ -1,0 +1,164 @@
+//Dato.h
+#pragma once
+#include <string>
+
+using namespace std;
+
+class Dato
+{
+public:
+    string valor;
+
+    Dato();
+};
+//Dato.cpp
+#include "Dato.h"
+
+Dato::Dato()
+{
+    valor = "Vacio";
+}
+//ColaEstatica.h
+#pragma once
+#include "Dato.h"
+
+#define MAX 10
+
+class ColaEstatica
+{
+private:
+    Dato datos[MAX];
+    int frente;
+    int fin;
+
+public:
+    ColaEstatica();
+
+    bool estaLlena();
+    bool estaVacia();
+    bool encolar(string valor);
+    string desencolar();
+    void mostrar();
+};
+//ColaEstatica.cpp
+#include <iostream>
+#include "ColaEstatica.h"
+
+using namespace std;
+
+ColaEstatica::ColaEstatica()
+{
+    frente = 0;
+    fin = -1;
+}
+
+bool ColaEstatica::estaLlena()
+{
+    return fin == MAX - 1;
+}
+
+bool ColaEstatica::estaVacia()
+{
+    return frente > fin;
+}
+
+bool ColaEstatica::encolar(string valor)
+{
+    if (estaLlena())
+    {
+        return false;
+    }
+
+    fin++;
+    datos[fin].valor = valor;
+    return true;
+}
+
+string ColaEstatica::desencolar()
+{
+    if (estaVacia())
+    {
+        return "COLA VACIA";
+    }
+
+    string valor = datos[frente].valor;
+    frente++;
+
+    return valor;
+}
+
+void ColaEstatica::mostrar()
+{
+    if (estaVacia())
+    {
+        cout << "La cola esta vacia" << endl;
+        return;
+    }
+
+    cout << "Contenido de la cola: ";
+
+    for (int i = frente; i <= fin; i++)
+    {
+        cout << datos[i].valor << " ";
+    }
+
+    cout << endl;
+}
+//main.cpp
+#include <iostream>
+#include "ColaEstatica.h"
+
+using namespace std;
+
+int main()
+{
+    ColaEstatica cola;
+    int opc;
+    string valor;
+
+    do
+    {
+        cout << endl;
+        cout << "=== COLA ESTATICA SIMPLE ===" << endl;
+        cout << "1. Ver si esta vacia" << endl;
+        cout << "2. Encolar elemento" << endl;
+        cout << "3. Desencolar elemento" << endl;
+        cout << "4. Mostrar cola" << endl;
+        cout << "5. Salir" << endl;
+        cout << "Opcion: ";
+        cin >> opc;
+        cin.ignore();
+
+        switch (opc)
+        {
+        case 1:
+            if (cola.estaVacia())
+                cout << "La cola esta vacia" << endl;
+            else
+                cout << "Hay elementos en la cola" << endl;
+            break;
+
+        case 2:
+            cout << "Ingrese valor: ";
+            getline(cin, valor);
+
+            if (cola.encolar(valor))
+                cout << "Elemento encolado correctamente" << endl;
+            else
+                cout << "La cola esta llena" << endl;
+
+            break;
+
+        case 3:
+            cout << "Elemento eliminado: " << cola.desencolar() << endl;
+            break;
+
+        case 4:
+            cola.mostrar();
+            break;
+        }
+
+    } while (opc != 5);
+
+    return 0;
+}
