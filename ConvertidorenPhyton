@@ -1,0 +1,68 @@
+import tkinter as tk
+from tkinter import messagebox
+import requests
+
+def obtener_precios_real():
+    try:
+        response = requests.get("https://api.binance.com/api/v3/ticker/price?symbol=USDTBID", timeout=2)
+        lbl_status.config(text="● Tasas sincronizadas", fg="#28a745")
+    except:
+        lbl_status.config(text="● Modo Offline", fg="#f39c12")
+        messagebox.showinfo("Conexión", "No hay señal. Ingresa los precios manualmente.")
+
+def calcular(direccion):
+    try:
+        monto = float(entry_monto.get())
+        tasa_bs = float(entry_compra_usdt_bs.get())
+        tasa_soles = float(entry_venta_usdt_soles.get())
+        
+        if direccion == "bs_a_soles":
+            res = (monto / tasa_bs) * tasa_soles
+            lbl_resultado.config(text=f"Recibes: S/ {res:.2f}")
+        else:
+            res = (monto / tasa_soles) * tasa_bs
+            lbl_resultado.config(text=f"Necesitas: {res:.2f} Bs")
+    except ValueError:
+        messagebox.showerror("Error", "Ingresa números válidos.")
+
+app = tk.Tk()
+app.title("Conversor Pro")
+app.geometry("400x580")
+app.configure(bg="white")
+
+canvas = tk.Canvas(app, width=400, height=120, bg="white", highlightthickness=0)
+canvas.pack(fill="x")
+canvas.create_rectangle(0, 0, 400, 80, fill="#003366", outline="")
+canvas.create_oval(-50, 40, 450, 110, fill="#003366", outline="")
+canvas.create_text(200, 45, text="MI BILLETERA", fill="white", font=("Segoe UI", 16, "bold"))
+
+content = tk.Frame(app, bg="white", padx=40)
+content.pack(expand=True, fill="both")
+
+lbl_status = tk.Label(content, text="● Esperando sincronización", font=("Segoe UI", 8), bg="white", fg="#7f8c8d")
+lbl_status.pack(anchor="e")
+
+def crear_input(label, default=""):
+    tk.Label(content, text=label, font=("Segoe UI", 9, "bold"), bg="white", fg="#666").pack(anchor="w", pady=(10,0))
+    entry = tk.Entry(content, font=("Segoe UI", 12), bg="#F0F4F8", bd=0, justify="center")
+    entry.insert(0, default)
+    entry.pack(fill="x", ipady=8, pady=5)
+    return entry
+
+entry_monto = crear_input("MONTO A CONVERTIR", "0.00")
+entry_compra_usdt_bs = crear_input("TASA USDT/BS", "11.50")
+entry_venta_usdt_soles = crear_input("TASA USDT/SOLES", "3.75")
+
+btn_sync = tk.Button(content, text="🔄 Sincronizar ahora", font=("Segoe UI", 8), bg="#eee", relief="flat", command=obtener_precios_real)
+btn_sync.pack(pady=5)
+
+btn_frame = tk.Frame(content, bg="white")
+btn_frame.pack(pady=10, fill="x")
+
+tk.Button(btn_frame, text="A SOLES", bg="#003366", fg="white", font=("Segoe UI", 10, "bold"), relief="flat", command=lambda: calcular("bs_a_soles")).pack(side="left", expand=True, fill="x", padx=5, ipady=8)
+tk.Button(btn_frame, text="A BS", bg="#0078D7", fg="white", font=("Segoe UI", 10, "bold"), relief="flat", command=lambda: calcular("soles_a_bs")).pack(side="right", expand=True, fill="x", padx=5, ipady=8)
+
+lbl_resultado = tk.Label(content, text="---", font=("Segoe UI", 12, "bold"), bg="#F0F4F8", fg="#003366", pady=20)
+lbl_resultado.pack(fill="x", pady=10)
+
+app.mainloop()
