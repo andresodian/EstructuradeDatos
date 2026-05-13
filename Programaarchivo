@@ -1,0 +1,236 @@
+//ProgArc.cpp
+#include <iostream>
+#include <string>
+#include "ABMamigo.h"
+
+using namespace std;
+
+int main() {
+	ABMamigo* amig = new ABMamigo("amigOO.dat");
+	int opcion;
+
+	do {
+		cout << "\n============================" << endl;
+		cout << "      MENU DE AMIGOS" << endl;
+		cout << "============================" << endl;
+		cout << "1. Adicionar Nuevo" << endl;
+		cout << "2. Listar" << endl;
+		cout << "3. Buscar Registro" << endl;
+		cout << "4. Eliminar Registro" << endl;
+		cout << "5. Modificar Registro" << endl;
+		cout << "0. Salir" << endl;
+		cout << "----------------------------" << endl;
+		cout << "Elija una opcion: ";
+		cin >> opcion;
+
+		switch (opcion) {
+		case 1:
+			amig->adicionarNuevo();
+			break;
+		case 2:
+			amig->listar();
+			cout << "\nPresione Enter para continuar...";
+			cin.ignore();
+			cin.get();
+			break;
+		case 3:
+			amig->buscarReg();
+			cout << "\nPresione Enter para continuar...";
+			cin.ignore();
+			cin.get();
+			break;
+		case 4:
+			amig->eliminarReg();
+			cout << "\nPresione Enter para continuar...";
+			cin.ignore();
+			cin.get();
+			break;
+		case 5:
+			amig->modificarReg();
+			cout << "\nPresione Enter para continuar...";
+			cin.ignore();
+			cin.get();
+			break;
+		case 0:
+			cout << "Cerrando aplicacion..." << endl;
+			break;
+		default:
+			cout << "Opcion no valida." << endl;
+			cin.ignore();
+			cin.get();
+		}
+
+	} while (opcion != 0);
+
+	delete amig;
+	return 0;
+}
+//Amigo.h
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+class Amigo {
+private:
+	string nombre;
+	int edad;
+	char sexo;
+	char estado;
+
+public:
+	Amigo();
+	Amigo(string nom, int ed, char sx);
+	void setAmigo(string nom, int ed, char sx);
+	string getNombre();
+	int getEdad();
+	char getSexo();
+	char getEstado();
+	void setEstado(char est);
+	void guardarArchivo(ofstream& fsalida);
+	bool leerArchivo(ifstream& fentrada);
+	int getTamBytesRegistro();
+};
+//Amigo.cpp
+#include "Amigo.h"
+
+Amigo::Amigo() {
+	nombre = "";
+	edad = 0;
+	sexo = ' ';
+	estado = ' ';
+}
+
+Amigo::Amigo(string nom, int ed, char sx) {
+	nombre = nom;
+	edad = ed;
+	sexo = sx;
+	estado = 'A';
+}
+
+void Amigo::setAmigo(string nom, int ed, char sx) {
+	nombre = nom;
+	edad = ed;
+	sexo = sx;
+	estado = 'A';
+}
+
+string Amigo::getNombre() {
+	return nombre;
+}
+
+int Amigo::getEdad() {
+	return edad;
+}
+
+char Amigo::getSexo() {
+	return sexo;
+}
+
+char Amigo::getEstado() {
+	return estado;
+}
+
+void Amigo::setEstado(char est) {
+	estado = est;
+}
+
+void Amigo::guardarArchivo(ofstream& fsalida) {
+	int tam = nombre.size();
+	fsalida.write(reinterpret_cast<char*>(&tam), sizeof(int));
+	fsalida.write(nombre.data(), tam);
+	fsalida.write(reinterpret_cast<char*>(&edad), sizeof(int));
+	fsalida.write(reinterpret_cast<char*>(&sexo), sizeof(char));
+	fsalida.write(reinterpret_cast<char*>(&estado), sizeof(char));
+}
+
+bool Amigo::leerArchivo(ifstream& fentrada) {
+	int tam;
+	if (fentrada.read(reinterpret_cast<char*>(&tam), sizeof(int))) {
+		nombre.resize(tam);
+		fentrada.read(&nombre[0], tam);
+		fentrada.read(reinterpret_cast<char*>(&edad), sizeof(int));
+		fentrada.read(reinterpret_cast<char*>(&sexo), sizeof(char));
+		fentrada.read(reinterpret_cast<char*>(&estado), sizeof(char));
+		return true;
+	}
+	return false;
+}
+
+int Amigo::getTamBytesRegistro() {
+	return sizeof(int) + nombre.size() + sizeof(int) + 2;
+}
+//ABMamigo.cpp
+#include "ABMamigo.h"
+
+ABMamigo::ABMamigo(string nomArch) {
+	nomArchivo = nomArch;
+	amig = new Amigo();
+}
+
+ABMamigo::~ABMamigo() {
+	delete amig;
+}
+
+void ABMamigo::introducirDatos(Amigo* newReg) {
+	string nom;
+	int ed;
+	char sx;
+	cout << "Nombre: ";
+	cin >> nom;
+	cout << "Edad: ";
+	cin >> ed;
+	cout << "Sexo: ";
+	cin >> sx;
+	newReg->setAmigo(nom, ed, sx);
+}
+
+void ABMamigo::adicionarNuevo() {
+	introducirDatos(amig);
+	ofstream f(nomArchivo, ios::binary | ios::app);
+	if (f.is_open()) {
+		amig->guardarArchivo(f);
+		f.close();
+	}
+}
+
+void ABMamigo::listar() {
+	ifstream f(nomArchivo, ios::binary);
+	if (f.is_open()) {
+		while (amig->leerArchivo(f)) {
+			if (amig->getEstado() == 'A') {
+				cout << amig->getNombre() << "\t" << amig->getEdad() << "\t" << amig->getSexo() << endl;
+			}
+		}
+		f.close();
+	}
+}
+//ABMamigo.h
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "Amigo.h"
+
+using namespace std;
+
+class ABMamigo {
+private:
+	string nomArchivo;
+	Amigo* amig;
+
+public:
+	ABMamigo(string nomArch);
+	~ABMamigo();
+
+	void introducirDatos(Amigo* newReg);
+	void mostrarRegistro(int nroReg);
+	void adicionarNuevo();
+	void listar();
+
+	int buscarReg();
+	void eliminarReg();
+	void modificarReg();
+};
