@@ -1,0 +1,91 @@
+//Shape.h
+#pragma once
+// Base class
+class Shape {
+protected:
+      int width;
+      int height;   
+public:
+      void setWidth(int w);
+      void setHeight(int h);
+};
+//Triangulo.h
+#pragma once
+#include "Shape.h"
+class Triangulo : public Shape {
+public:
+	Triangulo();
+	int getArea() {
+		return (width * height) / 2;
+	}
+	
+};
+//Rectangulo.h
+#pragma once
+#include "Shape.h"
+class Rectangulo: public Shape {
+public:
+	Rectangulo(void);
+	~Rectangulo(void);
+	 int getArea() { 
+         return (width * height); 
+      }
+};
+//Traiangulo.cpp
+#include "stdafx.h"
+#include "Triangulo.h"
+Triangulo::Triangulo() {
+
+}
+//Rectangulo.cpp
+#include "StdAfx.h"
+#include "Rectangulo.h"
+
+
+Rectangulo::Rectangulo(void)
+{
+}
+
+
+Rectangulo::~Rectangulo(void)
+{
+}
+//EjemploHerencia.cpp
+#include "stdafx.h"
+#include <iostream>
+#include "Triangulo.h"
+#include "Rectangulo.h"
+
+using namespace std;
+
+int main(void) {
+	Rectangulo Rect;
+	int base, altura;
+
+	Rect.setWidth(5);
+	Rect.setHeight(7);
+
+	// Muestra el área de un rectangulo
+	cout << "Total area: " << Rect.getArea() << endl;
+	Triangulo Tri;
+	cout << "Ingrese el dato de la base: ";
+	cin >> base;
+	cout << "Ingrese el dato de la altura: ";
+	cin >> altura;
+	Tri.setWidth(base);
+	Tri.setHeight(altura);
+	cout << "Total del area del triangulo es: " << Tri.getArea() << endl;
+	
+	Triangulo emanuel;
+	cout << "Ingrese el dato de la base: ";
+	cin >> base;
+	cout << "Ingrese el dato de la altura: ";
+	cin >> altura;
+	emanuel.setWidth(base);
+	emanuel.setHeight(altura);
+	cout << "Total del area del triangulo es: " << emanuel.getArea();
+   
+	return 0;
+}
+
+
