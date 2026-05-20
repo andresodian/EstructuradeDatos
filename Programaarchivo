@@ -65,6 +65,7 @@ int main() {
 	delete amig;
 	return 0;
 }
+
 //Amigo.h
 #pragma once
 #include <iostream>
@@ -93,6 +94,7 @@ public:
 	bool leerArchivo(ifstream& fentrada);
 	int getTamBytesRegistro();
 };
+
 //Amigo.cpp
 #include "Amigo.h"
 
@@ -162,6 +164,34 @@ bool Amigo::leerArchivo(ifstream& fentrada) {
 int Amigo::getTamBytesRegistro() {
 	return sizeof(int) + nombre.size() + sizeof(int) + 2;
 }
+
+//ABMamigo.h
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "Amigo.h"
+
+using namespace std;
+
+class ABMamigo {
+private:
+	string nomArchivo;
+	Amigo* amig;
+
+public:
+	ABMamigo(string nomArch);
+	~ABMamigo();
+
+	void introducirDatos(Amigo* newReg);
+	void adicionarNuevo();
+	void listar();
+
+	int buscarReg();
+	void eliminarReg();
+	void modificarReg();
+};
+
 //ABMamigo.cpp
 #include "ABMamigo.h"
 
@@ -193,44 +223,135 @@ void ABMamigo::adicionarNuevo() {
 	if (f.is_open()) {
 		amig->guardarArchivo(f);
 		f.close();
+		cout << "Registro adicionado con exito." << endl;
 	}
 }
 
 void ABMamigo::listar() {
 	ifstream f(nomArchivo, ios::binary);
 	if (f.is_open()) {
+		cout << "\n--- LISTA DE AMIGOS ACTIVOS ---" << endl;
+		cout << "Nombre\tEdad\tSexo" << endl;
+		cout << "----------------------------" << endl;
 		while (amig->leerArchivo(f)) {
 			if (amig->getEstado() == 'A') {
 				cout << amig->getNombre() << "\t" << amig->getEdad() << "\t" << amig->getSexo() << endl;
 			}
 		}
 		f.close();
+	} else {
+		cout << "No se pudo abrir el archivo o aun no contiene registros." << endl;
 	}
 }
-//ABMamigo.h
-#pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "Amigo.h"
 
-using namespace std;
+int ABMamigo::buscarReg() {
+	string nomBuscado;
+	cout << "Ingrese el nombre del amigo a buscar: ";
+	cin >> nomBuscado;
 
-class ABMamigo {
-private:
-	string nomArchivo;
-	Amigo* amig;
+	ifstream f(nomArchivo, ios::binary);
+	if (!f.is_open()) {
+		cout << "Error: No se pudo abrir el archivo." << endl;
+		return -1;
+	}
 
-public:
-	ABMamigo(string nomArch);
-	~ABMamigo();
+	int posRegistro = 0;
+	bool encontrado = false;
 
-	void introducirDatos(Amigo* newReg);
-	void mostrarRegistro(int nroReg);
-	void adicionarNuevo();
-	void listar();
+	while (amig->leerArchivo(f)) {
+		if (amig->getEstado() == 'A' && amig->getNombre() == nomBuscado) {
+			cout << "\n--- Registro Encontrado ---" << endl;
+			cout << "Nombre: " << amig->getNombre() << endl;
+			cout << "Edad:   " << amig->getEdad() << endl;
+			cout << "Sexo:   " << amig->getSexo() << endl;
+			encontrado = true;
+			break;
+		}
+		posRegistro++;
+	}
+	f.close();
 
-	int buscarReg();
-	void eliminarReg();
-	void modificarReg();
-};
+	if (encontrado) {
+		return posRegistro;
+	} else {
+		cout << "Amigo no encontrado o esta inactivo." << endl;
+		return -1;
+	}
+}
+
+void ABMamigo::eliminarReg() {
+	string nomEliminar;
+	cout << "Ingrese el nombre del amigo a eliminar (Baja Logica): ";
+	cin >> nomEliminar;
+
+	ifstream fEntrada(nomArchivo, ios::binary);
+	ofstream fSalida("temporal.dat", ios::binary);
+
+	if (!fEntrada.is_open()) {
+		cout << "El archivo no existe o no tiene datos." << endl;
+		if (fSalida.is_open()) fSalida.close();
+		return;
+	}
+
+	bool encontrado = false;
+
+	while (amig->leerArchivo(fEntrada)) {
+		if (amig->getEstado() == 'A' && amig->getNombre() == nomEliminar) {
+			amig->setEstado('I'); // 'I' de Inactivo
+			encontrado = true;
+			cout << "Registro de '" << nomEliminar << "' marcado como eliminado." << endl;
+		}
+		amig->guardarArchivo(fSalida);
+	}
+
+	fEntrada.close();
+	fSalida.close();
+
+	remove(nomArchivo.c_str());
+	rename("temporal.dat", nomArchivo.c_str());
+
+	if (!encontrado) {
+		cout << "No se encontro ningun amigo activo con ese nombre." << endl;
+	}
+}
+
+void ABMamigo::modificarReg() {
+	string nomModificar;
+	cout << "Ingrese el nombre del amigo a modificar: ";
+	cin >> nomModificar;
+
+	ifstream fEntrada(nomArchivo, ios::binary);
+	ofstream fSalida("temporal.dat", ios::binary);
+
+	if (!fEntrada.is_open()) {
+		cout << "El archivo no existe o no tiene datos." << endl;
+		if (fSalida.is_open()) fSalida.close();
+		return;
+	}
+
+	bool encontrado = false;
+
+	while (amig->leerArchivo(fEntrada)) {
+		if (amig->getEstado() == 'A' && amig->getNombre() == nomModificar) {
+			encontrado = true;
+			cout << "\n--- Datos actuales de " << nomModificar << " ---" << endl;
+			cout << "Edad: " << amig->getEdad() << ", Sexo: " << amig->getSexo() << endl;
+
+			cout << "\nIngrese los nuevos datos:" << endl;
+			introducirDatos(amig); 
+		}
+		amig->guardarArchivo(fSalida);
+	}
+
+	fEntrada.close();
+	fSalida.close();
+
+	remove(nomArchivo.c_str());
+	rename("temporal.dat", nomArchivo.c_str());
+
+	if (encontrado) {
+		cout << "Registro modificado con exito." << endl;
+	} else {
+		cout << "No se encontro ningun amigo activo con ese nombre para modificar." << endl;
+	}
+}
