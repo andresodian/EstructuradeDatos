@@ -1,72 +1,126 @@
-#include <iostream>
-using namespace std;
+//Operaciones.h
+#pragma once
 #define MAX 10
-void serie(int n);
-void cargar(int vec[], int n);
-void mostrar(int vec[], int n);
-void cargarmatriz(int mat[MAX][MAX], int m, int n, int tam);
+
+class Operaciones
+{
+public:
+    void serie(int n, int num);
+    void cargar(int vec[], int n);
+    void mostrar(int vec[], int n);
+    void cargarmatriz(int mat[MAX][MAX], int filas, int columnas);
+    void mostrarmatriz(int mat[MAX][MAX], int filas, int columnas);
+};
+//Operaciones.cpp
+#include <iostream>
+#include "Operaciones.h"
+
+using namespace std;
+
+void Operaciones::serie(int n, int num)
+{
+    if (n == 0)
+    {
+        return;
+    }
+    cout << num << endl;
+    serie(n - 1, num + 3);
+}
+
+void Operaciones::cargar(int vec[], int n)
+{
+    vec[0] = 1;
+    for (int i = 1; i < n; i++)
+    {
+        vec[i] = vec[i - 1] + 3;
+    }
+    mostrar(vec, n);
+}
+
+void Operaciones::mostrar(int vec[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << "elemento i=" << i << " = " << vec[i] << endl;
+    }
+}
+
+void Operaciones::cargarmatriz(int mat[MAX][MAX], int filas, int columnas)
+{
+    for (int i = 0; i < filas; i++)
+    {
+        for (int j = 0; j < columnas; j++)
+        {
+            cout << "Elemento [" << i << "][" << j << "]: ";
+            cin >> mat[i][j];
+        }
+    }
+    mostrarmatriz(mat, filas, columnas);
+}
+
+void Operaciones::mostrarmatriz(int mat[MAX][MAX], int filas, int columnas)
+{
+    cout << "\nMatriz:" << endl;
+    for (int i = 0; i < filas; i++)
+    {
+        for (int j = 0; j < columnas; j++)
+        {
+            cout << mat[i][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+//main.cpp
+#include <iostream>
+#include "Operaciones.h"
+
+using namespace std;
 
 int main()
 {
-    int opcion, n, vec[MAX], m, n2, maz[MAX][MAX];
+    int opcion, n, m, columnas;
+    int vec[MAX], maz[MAX][MAX];
+    Operaciones op;
+
     do {
-        cout << "MENU" << endl;
-        cout << "1.Serie:";
-        cout << "2.Cargar vector";
-        cout << "3.Cargar a matriz";
-        cout << "0.Salir";
+        cout << "\nMENU" << endl;
+        cout << "1. Serie" << endl;
+        cout << "2. Cargar vector" << endl;
+        cout << "3. Cargar matriz" << endl;
+        cout << "0. Salir" << endl;
+        cout << "Elige una opcion: ";
         cin >> opcion;
+
         switch (opcion) {
         case 1:
-            cout << "Colocar los elementos de la serie:";
+            cout << "Cantidad de elementos de la serie: ";
             cin >> n;
-            serie(n);
+            op.serie(n, 1);
             break;
+
         case 2:
-            cout << "Colocar los cantidades del vector:";
+            cout << "Cantidad de elementos del vector: ";
             cin >> n;
-            cargar(vec, n);//aqui puedes llamar mostrar
+            op.cargar(vec, n);
             break;
+
         case 3:
-            cout << "Colocar los elements de la serie:";
-            cin >> n;
-            cout << "Colocar el tamaño de la matriz (fila x columna):";
+            cout << "Filas de la matriz: ";
             cin >> m;
-            cout << "Columnas:";
-            cin >> n2;
-            cargarmatriz(maz, m, n2, n);
+            cout << "Columnas de la matriz: ";
+            cin >> columnas;
+            op.cargarmatriz(maz, m, columnas);
             break;
+
         case 0:
-            cout << "Saliendo...";
+            cout << "Saliendo..." << endl;
             break;
+
         default:
-            cout << "ERROR";
+            cout << "ERROR: opcion invalida" << endl;
             break;
         }
     } while (opcion != 0);
-}
 
-void serie(int n, int num) {
-     if (n ==0) {
-         return;
-    }
-    else {
-         cout << num << endl;
-    }
-     serie(n - 1, num + 3);
+    return 0;
 }
-void cargar(int vec[], int n) {
-    vec[0] = 1;
-        for (int i = 1; i < n; i++){
-            vec[i] = vec[i - 1] + 3;
-         mostrar(vec, n);
-}
-void mostrar(int vec[], int n) {
-    for (int j = 0; j < n; j++){
-        cout << "elemento i=" << i << "= ";
-    cout << vec[i] << endl;
-}
-void cargarmatriz(int mat[MAX][MAX], int m, int n, int tam) {
-
-}
-INCOMPLETO
